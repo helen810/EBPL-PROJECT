@@ -1,0 +1,58 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, accuracy_score
+
+# Sample synthetic dataset
+data = {
+    'Gender': ['Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female'],
+    'Age': [17, 18, 17, 18, 17, 19, 18, 17],
+    'Hours_Studied': [5, 15, 10, 3, 8, 2, 9, 12],
+    'Attendance': [90, 95, 85, 70, 88, 60, 82, 96],
+    'Parent_Education': ['College', 'High School', 'College', 'High School', 'College', 'None', 'High School', 'College'],
+    'Previous_Grade': [80, 85, 70, 50, 75, 40, 65, 88],
+    'Pass': [1, 1, 1, 0, 1, 0, 0, 1]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Encode categorical variables
+df['Gender'] = df['Gender'].map({'Male': 0, 'Female': 1})
+df['Parent_Education'] = df['Parent_Education'].map({'None': 0, 'High School': 1, 'College': 2})
+
+# Features and target
+X = df.drop('Pass', axis=1)
+y = df['Pass']
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Train model
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+
+# Output results
+print("Predicted values:", y_pred)
+print("\nActual values:   ", y_test.values)
+print("\nAccuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+output:
+Predicted values: [1 0 1]
+Actual values:    [1 0 1]
+
+Accuracy: 1.0
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         1
+           1       1.00      1.00      1.00         2
+
+    accuracy                           1.00         3
+   macro avg       1.00      1.00      1.00         3
+weighted avg       1.00      1.00      1.00         3
